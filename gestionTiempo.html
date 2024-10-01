@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gestion de Tiempo</title>
+    <style>
+body {display: flex;
+      justify-content: center;
+      align-items: center;
+       height: 100vh;
+       margin: 0;
+      background-color: rgb(150, 187, 196);
+    font-size: 40px;}
+
+#contenedor {text-align: center;}    
+
+.tabla-centrada {
+  margin: 0 auto; 
+   width: 60%;
+   border: 3px;
+   border-style: double;
+   background-color: white;
+   } 
+    </style>
+  </head>
+  <body>
+    <div id="contenedor"></div>
+  </body>
+  <script>
+    let contenedor = document.getElementById("contenedor");
+    let tabla = document.createElement("table");
+    tabla.className = "tabla-centrada";
+    let fila1 = document.createElement("tr");
+    let fila2 = document.createElement("tr");
+    let colmeses = document.createElement("th");
+    let coldias = document.createElement("th");
+    let colhoras = document.createElement("th");
+    let colminutos = document.createElement("th");
+    let colsegundos = document.createElement("th");
+    let h1 = document.createElement("h1");
+    h1.textContent = "Fecha elegida: ";
+
+    let contenidomes = document.createElement("th");
+    let contenidodia = document.createElement("th");
+    let contenidohora = document.createElement("th");
+    let contenidominuto = document.createElement("th");
+    let contenidosegundo = document.createElement("th");
+
+    let dateInput = document.createElement("input");
+    dateInput.type = "datetime-local";
+    dateInput.id = "dateInput";
+
+    tabla.append(fila1, fila2);
+    fila2.append(
+      contenidomes,
+      contenidodia,
+      contenidohora,
+      contenidominuto,
+      contenidosegundo
+    );
+    fila1.append(colmeses, coldias, colhoras, colminutos, colsegundos);
+
+    let boton = document.createElement("button");
+    boton.textContent = "Actualizar fecha";
+
+    contenedor.append(h1, dateInput, boton);
+    
+
+
+   
+
+    function actualizar() {
+      contenedor.append(h1, tabla, dateInput, boton);
+      contenidomes.textContent = "";
+      contenidodia.textContent = "";
+      contenidohora.textContent = "";
+      contenidominuto.textContent = "";
+      contenidosegundo.textContent = "";
+
+      let fecha = new Date(dateInput.value);
+      let interval = setInterval(() => {
+        let ahora = new Date();
+        let diferencia = fecha - ahora;
+
+        if (diferencia < 0) {
+          fila2.style.color = "black";
+          clearInterval(interval);
+          contenidomes.textContent = "00";
+          contenidodia.textContent = "00";
+          contenidohora.textContent = "00";
+          contenidominuto.textContent = "00";
+          contenidosegundo.textContent = "00";
+
+          return;
+        }
+
+        let meses = Math.floor(diferencia / (1000 * 60 * 60 * 24 * 30));
+        let dias = Math.floor(
+          (diferencia % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
+        );
+        let horas = Math.floor(
+          (diferencia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        let minutos = Math.floor((diferencia % (1000 * 60 * 60)) / (1000 * 60));
+        let segundos = Math.floor((diferencia % (1000 * 60)) / 1000);
+
+        if (meses>=1){
+          fila2.style.color = "green";
+        }else if(meses<1 && dias<=7){
+          fila2.style.color = "red";
+        }else if(meses<1 && dias<=14 && dias>=7){
+          fila2.style.color = "orange";
+        }
+
+
+        h1.textContent = "Fecha elegida: " + fecha;
+
+        colmeses.textContent = "Meses";
+    coldias.textContent = "Días";
+    colhoras.textContent = "Horas";
+    colminutos.textContent = "Minutos";
+    colsegundos.textContent = "Segundos";
+
+        contenidomes.textContent = meses;
+        contenidodia.textContent = dias;
+        contenidohora.textContent = horas;
+        contenidominuto.textContent = minutos;
+        contenidosegundo.textContent = segundos;
+      }, 1000);
+      dateInput.value = "";
+    }
+    
+    boton.onclick = actualizar;
+  </script>
+</html>
